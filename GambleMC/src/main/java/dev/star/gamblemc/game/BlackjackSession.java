@@ -45,6 +45,7 @@ public class BlackjackSession extends GameSession {
     private static final int STAND_SLOT = 49;
     private static final int DOUBLE_SLOT = 53;
     private static final int BET_INFO_SLOT = 40;
+    private static final int CANCEL_SLOT = 48;
 
     private final List<Integer> playerHand = new ArrayList<>();
     private final List<Integer> dealerHand = new ArrayList<>();
@@ -75,6 +76,9 @@ public class BlackjackSession extends GameSession {
         checkNaturalBlackjack();
 
         player.openInventory(inventory);
+        inventory.setItem(CANCEL_SLOT, ItemUtil.make(Material.EMERALD,
+            "&a&lCancel",
+            "&7Refund your bet and exit the game"));
     }
 
     private void buildBaseLayout() {
@@ -219,6 +223,13 @@ public class BlackjackSession extends GameSession {
                 plugin.getSessionManager().removeSession(player);
                 player.closeInventory();
             }
+            return;
+        }
+
+        if (slot == CANCEL_SLOT && !gameOver && playerTurn) {
+            plugin.getSessionManager().cancelSession(player);
+            player.sendMessage("§6[GambleMC] §aYour bet has been refunded.");
+            player.closeInventory();
             return;
         }
 

@@ -44,6 +44,18 @@ public class SessionManager {
         }
     }
 
+    /**
+     * Cancel a session and refund the player's bet without applying cooldown or recording a loss.
+     */
+    public void cancelSession(Player player) {
+        GameSession session = activeSessions.remove(player.getUniqueId());
+        if (session != null) {
+            // Refund bet
+            plugin.getEconomyManager().deposit(player, session.getBet());
+            session.cleanup();
+        }
+    }
+
     public boolean isOnCooldown(Player player) {
         if (player.hasPermission("gamblemc.bypass.cooldown")) return false;
         Long end = cooldowns.get(player.getUniqueId());

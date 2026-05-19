@@ -42,6 +42,7 @@ public class SlotsSession extends GameSession {
 
     private static final int SPIN_BUTTON = 49;
     private static final int BET_SLOT = 4;
+    private static final int CANCEL_SLOT = 48;
 
     // Symbol definitions: [material, display name, multiplier key]
     public enum Symbol {
@@ -127,6 +128,11 @@ public class SlotsSession extends GameSession {
                 "&7Click to spin the reels!",
                 "&eBet: " + plugin.getEconomyManager().formatAmount(bet)));
 
+        // Cancel (refund)
+        inventory.setItem(CANCEL_SLOT, ItemUtil.make(Material.EMERALD,
+            "&a&lCancel",
+            "&7Refund your bet and exit the game"));
+
         // Payout guide slot
         inventory.setItem(45, ItemUtil.make(Material.BOOK, "&e&lPayout Guide",
                 "&73-of-a-kind → 0.5x multiplier",
@@ -152,6 +158,13 @@ public class SlotsSession extends GameSession {
 
     @Override
     public void handleClick(int slot) {
+        if (slot == CANCEL_SLOT && !spinning && !hasSpun) {
+            plugin.getSessionManager().cancelSession(player);
+            player.sendMessage("§6[GambleMC] §aYour bet has been refunded.");
+            player.closeInventory();
+            return;
+        }
+
         if (slot == SPIN_BUTTON && !spinning && !hasSpun) {
             startSpin();
         } else if (slot == 49 && hasSpun) {

@@ -1,0 +1,21 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< dev.star:StarGamble >-------------------------
+[INFO] Building StarGamble 1.26.1.2
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ StarGamble ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ StarGamble ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 15 source files with javac [debug release 21] to target/classes
+[INFO] /workspaces/StarGamble/GambleMC/src/main/java/dev/star/gamblemc/GambleMC.java: Some input files use or override a deprecated API.
+[INFO] /workspaces/StarGamble/GambleMC/src/main/java/dev/star/gamblemc/GambleMC.java: Recompile with -Xlint:deprecation for details.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.222 s
+[INFO] Finished at: 2026-05-19T01:08:29Z
+[INFO] ------------------------------------------------------------------------

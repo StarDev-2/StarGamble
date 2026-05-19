@@ -22,8 +22,18 @@ public class GUIListener implements Listener {
     private final GambleMC plugin;
     // Players waiting to type a custom bet amount in chat
     private final Map<UUID, BetSelectionGUI.GameType> awaitingCustomBet = new HashMap<>();
-    // Track which game type a player is selecting a bet for
-    private final Map<UUID, BetSelectionGUI.GameType> betSelectionGame = new HashMap<>();
+    // Track which game type and page a player is selecting a bet for
+    private final Map<UUID, BetState> betSelectionGame = new HashMap<>();
+
+    private static class BetState {
+        public final BetSelectionGUI.GameType type;
+        public int page;
+
+        public BetState(BetSelectionGUI.GameType type, int page) {
+            this.type = type;
+            this.page = page;
+        }
+    }
 
     public GUIListener(GambleMC plugin) {
         this.plugin = plugin;
@@ -74,13 +84,13 @@ public class GUIListener implements Listener {
     }
 
     private void openBetSelection(Player player, BetSelectionGUI.GameType type) {
-        betSelectionGame.put(player.getUniqueId(), type);
-        player.openInventory(BetSelectionGUI.build(plugin, player, type));
+        betSelectionGame.put(player.getUniqueId(), new BetState(type, 0));
+        player.openInventory(BetSelectionGUI.build(plugin, player, type, 0));
     }
 
     private void handleBetSelection(Player player, int slot) {
-        BetSelectionGUI.GameType type = betSelectionGame.get(player.getUniqueId());
-        if (type == null) return;
+        BetState state = betSelectionGame.get(player.getUniqueId());
+        if (state == null) return;
 
         if (slot == BetSelectionGUI.BACK_SLOT) {
             player.openInventory(MainMenuGUI.build(plugin, player));
@@ -88,17 +98,29 @@ public class GUIListener implements Listener {
         }
 
         if (slot == BetSelectionGUI.CUSTOM_BET_SLOT) {
-            awaitingCustomBet.put(player.getUniqueId(), type);
+            awaitingCustomBet.put(player.getUniqueId(), state.type);
             player.closeInventory();
             player.sendMessage("§6[GambleMC] §eType your bet amount in chat:");
+            return;
+        }
+
+        if (slot == BetSelectionGUI.PREV_PAGE_SLOT) {
+            if (state.page > 0) state.page--;
+            player.openInventory(BetSelectionGUI.build(plugin, player, state.type, state.page));
+            return;
+        }
+
+        if (slot == BetSelectionGUI.NEXT_PAGE_SLOT) {
+            if (state.page < BetSelectionGUI.MAX_PAGES - 1) state.page++;
+            player.openInventory(BetSelectionGUI.build(plugin, player, state.type, state.page));
             return;
         }
 
         // Check preset bet slots
         for (int i = 0; i < BetSelectionGUI.BET_SLOTS.length; i++) {
             if (slot == BetSelectionGUI.BET_SLOTS[i]) {
-                double amount = BetSelectionGUI.BET_AMOUNTS[i];
-                startGame(player, type, amount);
+                double amount = BetSelectionGUI.BASE_BET_AMOUNTS[i] * Math.pow(10, state.page);
+                startGame(player, state.type, amount);
                 return;
             }
         }

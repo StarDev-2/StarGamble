@@ -53,6 +53,7 @@ public class HigherLowerSession extends GameSession {
 
     private final int[] history; // stores past cards
     private final Random random = new Random();
+    private static final int CANCEL_SLOT = 48;
 
     public HigherLowerSession(GambleMC plugin, Player player, double bet) {
         super(plugin, player, bet);
@@ -93,6 +94,10 @@ public class HigherLowerSession extends GameSession {
                 Component.text("📊 Higher or Lower — Round 1/" + maxRounds).color(NamedTextColor.AQUA));
 
         buildLayout();
+        // Cancel (refund)
+        inventory.setItem(CANCEL_SLOT, ItemUtil.make(Material.EMERALD,
+            "&a&lCancel",
+            "&7Refund your bet and exit the game"));
         player.openInventory(inventory);
     }
 
@@ -180,6 +185,13 @@ public class HigherLowerSession extends GameSession {
     @Override
     public void handleClick(int slot) {
         if (waitingForReveal || finished) return;
+
+        if (slot == CANCEL_SLOT && !waitingForReveal && !finished) {
+            plugin.getSessionManager().cancelSession(player);
+            player.sendMessage("§6[GambleMC] §aYour bet has been refunded.");
+            player.closeInventory();
+            return;
+        }
 
         if (slot == HIGHER_SLOT) {
             playerGuessedHigher = true;

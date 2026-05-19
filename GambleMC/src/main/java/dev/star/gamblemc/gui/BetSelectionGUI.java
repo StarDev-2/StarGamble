@@ -18,12 +18,15 @@ public class BetSelectionGUI {
     }
 
     // Bet amount slots (positions in the GUI)
-    public static final int[] BET_SLOTS = {10, 11, 12, 13, 14, 15, 16};
-    public static final double[] BET_AMOUNTS = {10, 50, 100, 500, 1000, 5000, 10000};
+        public static final int[] BET_SLOTS = {10, 11, 12, 13, 14, 15, 16};
+        public static final double[] BASE_BET_AMOUNTS = {10, 50, 100, 500, 1000, 5000, 10000};
     public static final int CUSTOM_BET_SLOT = 22; // player types in chat
     public static final int BACK_SLOT = 49;
+        public static final int PREV_PAGE_SLOT = 45;
+        public static final int NEXT_PAGE_SLOT = 53;
+        public static final int MAX_PAGES = 3; // pages 0..2
 
-    public static Inventory build(GambleMC plugin, Player player, GameType gameType) {
+        public static Inventory build(GambleMC plugin, Player player, GameType gameType, int page) {
         double min = plugin.getConfig().getDouble("min-bet", 10.0);
         double max = plugin.getConfig().getDouble("max-bet", 100000.0);
         double balance = plugin.getEconomyManager().getBalance(player);
@@ -35,8 +38,11 @@ public class BetSelectionGUI {
             case BLACKJACK -> "&c♠ Blackjack";
         };
 
+        String pageStr = "";
+        if (page > 0) pageStr = " — Page " + (page + 1);
+
         Inventory inv = Bukkit.createInventory(null, 54,
-                Component.text("💰 Place Your Bet — " + net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+                Component.text("💰 Place Your Bet" + pageStr + " — " + net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
                         .legacyAmpersand().serialize(ItemUtil.color(gameName)).replaceAll("§.", "")));
 
         for (int i = 0; i < 54; i++) inv.setItem(i, ItemUtil.fillerBlack());
@@ -59,8 +65,9 @@ public class BetSelectionGUI {
                 Material.NETHERITE_INGOT
         };
 
-        for (int i = 0; i < BET_AMOUNTS.length; i++) {
-            double amount = BET_AMOUNTS[i];
+                for (int i = 0; i < BASE_BET_AMOUNTS.length; i++) {
+                        // Calculate amount scaled by page (10^page)
+                        double amount = BASE_BET_AMOUNTS[i] * Math.pow(10, page);
             boolean canAfford = balance >= amount && amount >= min && amount <= max;
             boolean outOfRange = amount < min || amount > max;
 
@@ -84,6 +91,14 @@ public class BetSelectionGUI {
         inv.setItem(BACK_SLOT, ItemUtil.make(Material.ARROW,
                 "&c&l← Back",
                 "&7Return to game selection"));
+
+        // Page navigation
+        inv.setItem(PREV_PAGE_SLOT, ItemUtil.make(Material.ARROW,
+                "&7&l← Prev Page",
+                page > 0 ? "&7Go to previous page" : "&8No previous page"));
+        inv.setItem(NEXT_PAGE_SLOT, ItemUtil.make(Material.ARROW,
+                "&7&lNext Page →",
+                page < MAX_PAGES - 1 ? "&7Go to next page" : "&8No next page"));
 
         return inv;
     }

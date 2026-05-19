@@ -34,6 +34,7 @@ public class CoinflipSession extends GameSession {
     private final ItemStack GLASS_GOLD = ItemUtil.make(Material.GOLD_BLOCK, " ");
     private final ItemStack GLASS_WHITE = ItemUtil.make(Material.WHITE_STAINED_GLASS_PANE, " ");
     private final ItemStack FILLER = ItemUtil.filler();
+    private static final int CANCEL_SLOT = 48;
 
     public CoinflipSession(GambleMC plugin, Player player, double bet) {
         super(plugin, player, bet);
@@ -69,6 +70,11 @@ public class CoinflipSession extends GameSession {
         // Decorative gold border
         inventory.setItem(40, ItemUtil.make(Material.GOLD_BLOCK, " "));
 
+        // Cancel (refund)
+        inventory.setItem(CANCEL_SLOT, ItemUtil.make(Material.EMERALD,
+            "&a&lCancel",
+            "&7Refund your bet and exit the game"));
+
         player.openInventory(inventory);
     }
 
@@ -94,6 +100,13 @@ public class CoinflipSession extends GameSession {
 
     @Override
     public void handleClick(int slot) {
+        // Cancel button
+        if (slot == CANCEL_SLOT && !animating && !resultShown) {
+            plugin.getSessionManager().cancelSession(player);
+            player.sendMessage("§6[GambleMC] §aYour bet has been refunded.");
+            player.closeInventory();
+            return;
+        }
         if (animating || resultShown) return;
 
         if (slot == PICK_HEADS) {
