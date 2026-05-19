@@ -1,0 +1,27 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< dev.star:GambleMC >--------------------------
+[INFO] Building GambleMC 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ GambleMC ---
+[INFO] Deleting /workspaces/StarGamble/GambleMC/target
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ GambleMC ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ GambleMC ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 15 source files with javac [debug target 21] to target/classes
+[WARNING] location of system modules is not set in conjunction with -source 21
+  not setting the location of system modules may lead to class files that cannot run on JDK 21
+    --release 21 is recommended instead of -source 21 -target 21 because it sets the location of system modules automatically
+[INFO] /workspaces/StarGamble/GambleMC/src/main/java/dev/star/gamblemc/GambleMC.java: Some input files use or override a deprecated API.
+[INFO] /workspaces/StarGamble/GambleMC/src/main/java/dev/star/gamblemc/GambleMC.java: Recompile with -Xlint:deprecation for details.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.257 s
+[INFO] Finished at: 2026-05-18T23:56:13Z
+[INFO] ------------------------------------------------------------------------

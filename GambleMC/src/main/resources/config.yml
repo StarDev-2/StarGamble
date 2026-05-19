@@ -1,0 +1,59 @@
+# GambleMC Configuration
+
+# Minimum and maximum bet amounts
+min-bet: 10.0
+max-bet: 100000.0
+
+# Cooldown between gambling sessions (seconds). Set to 0 to disable.
+cooldown-seconds: 5
+
+# House edge percentage (0-100). This is the % chance the house wins on ties/edge cases.
+house-edge: 2.5
+
+# Currency symbol shown in messages
+currency-symbol: "$"
+
+# Slot machine configuration
+slots:
+  # Multipliers for matching symbols (3-of-a-kind)
+  multipliers:
+    SEVEN: 50.0       # Diamond block - jackpot
+    BAR: 10.0         # Gold block
+    CHERRY: 5.0       # Red wool
+    LEMON: 3.0        # Yellow wool
+    WATERMELON: 2.0   # Green wool
+    BELL: 1.5         # Orange wool
+
+# Blackjack configuration
+blackjack:
+  # Blackjack (natural 21) payout multiplier
+  blackjack-payout: 2.5
+  # Normal win payout multiplier
+  win-payout: 2.0
+  # Whether dealer must stand on soft 17
+  dealer-stand-soft-17: true
+
+# Coinflip configuration
+coinflip:
+  # Win payout multiplier (2.0 = double your bet)
+  win-payout: 2.0
+  # Flip animation duration in ticks (20 ticks = 1 second)
+  animation-ticks: 40
+
+# Higher or lower configuration
+higher-lower:
+  # Win multiplier for correct guess
+  win-payout: 2.0
+  # Cards shown before final reveal
+  rounds: 5
+
+# Messages (supports &color codes)
+messages:
+  prefix: "&8[&6GambleMC&8] &r"
+  no-permission: "&cYou don't have permission to do that."
+  not-enough-money: "&cYou don't have enough money to place that bet!"
+  bet-too-low: "&cMinimum bet is {min}!"
+  bet-too-high: "&cMaximum bet is {max}!"
+  cooldown: "&cPlease wait &e{time}s &cbefore gambling again."
+  vault-not-found: "&cVault not found! Economy features disabled."
+  player-not-found: "&cPlayer not found."

@@ -1,0 +1,30 @@
+name: StarGamble
+version: '${project.version}'
+main: dev.star.gamblemc.GambleMC
+api-version: '1.26'
+authors: [ Star ]
+description: A feature-rich gambling plugin with animated GUIs and Vault integration
+softdepend:
+  - Vault
+
+commands:
+  gamble:
+    description: Open the gambling menu
+    usage: /gamble
+    permission: gamblemc.use
+
+  gambleadmin:
+    description: Admin commands for GambleMC
+    usage: /gambleadmin <subcommand>
+    permission: gamblemc.admin
+
+permissions:
+  gamblemc.use:
+    description: Allows using /gamble
+    default: true
+  gamblemc.admin:
+    description: Allows admin commands
+    default: op
+  gamblemc.bypass.cooldown:
+    description: Bypass gambling cooldown
+    default: op
